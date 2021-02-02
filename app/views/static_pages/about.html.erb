@@ -1,7 +1,6 @@
-<!DOCTYPE html>
-<html>
+<% provide(:title, "About") %>
   <head>
-    <title>About | Ruby on Rails Tutorial Sample App</title>
+    <title><%= yield(:title) %> | Ruby on Rails Tutorial Sample App</title>
   </head>
   <body>
     <h1>About</h1>
@@ -14,4 +13,3 @@
       This is the sample application for the tutorial.
     </p>
   </body>
-</html>
