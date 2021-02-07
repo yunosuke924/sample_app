@@ -21,5 +21,6 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     follow_redirect! #リダイレクトの確認
     assert_template 'users/show' #ビューが正しく表示されるかの確認
     assert_not flash.blank? #フラッシュが空白ではないことの確認
+    assert is_logged_in?
   end
 end
