@@ -16,9 +16,8 @@ module SessionsHelper
 			#user_idにユーザーIDのセッションを代入して、セッションが存在すれば
 			@current_user ||= User.find_by(id: user_id)
 		elsif (user_id = cookies.signed[:user_id])
-			#raise 意図的に例外を発生
 			user = User.find_by(id: user_id)
-			if user && user.authenticated?(cookies[:remember_token])
+			if user && user.authenticated?(:remember, cookies[:remember_token])
 				log_in user
 				@current_user = user
 			end
