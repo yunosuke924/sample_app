@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-	attr_accessor :remember_token, :activation_token #仮の属性
+	attr_accessor :remember_token, :activation_token, :reset_token #仮の属性
 	before_save   :downcase_email #ブロックを渡すよりメソッドを参照する方が良いので変更
 	before_create :create_activation_digest #有効化のトークン作成、ダイジェスト化
 	validates :name, presence: true, length: { maximum: 50 }
@@ -57,6 +57,24 @@ class User < ApplicationRecord
 		UserMailer.account_activation(self).deliver_now
 	end
 
+	# パスワード再設定の属性を設定する
+	def create_reset_digest
+		self.reset_token = User.new_token
+		update_columns(reset_digest: User.digest(reset_token), reset_sent_at: Time.zone.now)
+		#update_attribute(:reset_digest,  User.digest(reset_token))
+		#update_attribute(:reset_sent_at, Time.zone.now)
+	end
+	
+	  # パスワード再設定のメールを送信する
+	def send_password_reset_email
+		UserMailer.password_reset(self).deliver_now
+	end
+
+	def password_reset_expired?
+		reset_sent_at < 2.hours.ago
+	end
+
+	private
 
 	def downcase_email
 		self.email = email.downcase
