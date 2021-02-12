@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+	has_many :microposts, dependent: :destroy #:destroyはオプション。userが消滅すると、micropostsも消える。
 	attr_accessor :remember_token, :activation_token, :reset_token #仮の属性
 	before_save   :downcase_email #ブロックを渡すよりメソッドを参照する方が良いので変更
 	before_create :create_activation_digest #有効化のトークン作成、ダイジェスト化
@@ -72,6 +73,12 @@ class User < ApplicationRecord
 
 	def password_reset_expired?
 		reset_sent_at < 2.hours.ago
+	end
+
+	#指定の投稿を一覧表示
+	def feed
+		#self.microposts 
+		Micropost.where("user_id = ?", id)
 	end
 
 	private
